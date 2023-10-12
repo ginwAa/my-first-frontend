@@ -38,7 +38,7 @@
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'username'">
           <div class="editable-cell" v-if="adminAuth">
-            <div v-if="editableData[record.id] && editableData[record.id][column.title]" class="editable-cell-input-wrapper">
+            <div v-if="editableData[record.id] && editableData[record.id][column.dataIndex]" class="editable-cell-input-wrapper">
               <a-input v-model:value="editableData[record.id].username" @pressEnter="save(record.id, 'username')" />
               <check-outlined class="editable-cell-icon-check" @click="save(record.id, 'username')" />
             </div>
@@ -190,13 +190,13 @@ const checkAccountUnique = async (_rule: Rule, value: string) => {
 };
 const addFormRules: Record<string, Rule[]> = {
   account: [{ required: true, message: 'Please input account!', trigger: 'change' },
-    { validator: checkAccountUnique, trigger: 'change' }],
-  username: [{ required: true, message: 'Please input username!', trigger: 'change' }],
-  password: [{ required: true, message: 'Please input password!', trigger: 'change' }],
+    { validator: checkAccountUnique, trigger: 'change' }, {message: 'too long!', max: 20}],
+  username: [{ required: true, message: 'Please input username!', trigger: 'change' }, {message: 'too long!', max: 20}],
+  password: [{ required: true, message: 'Please input password!', trigger: 'change' }, {message: 'too long!', max: 20}],
   checked: [{ required: true, message: 'Please input password again!', trigger: 'change' },
-    { validator: checkPasswordAgain, trigger: 'change' }],
-  phone: [{ required: true, message: 'Please input phone!', trigger: 'change' }],
-  email: [{ required: true, message: 'Please input email!', trigger: 'change' }],
+    { validator: checkPasswordAgain, trigger: 'change' }, {message: 'too long!', max: 20}],
+  phone: [{ required: true, message: 'Please input phone!', trigger: 'change' }, {message: 'too long!', max: 20}],
+  email: [{ required: true, message: 'Please input email!', trigger: 'change' }, {message: 'too long!', max: 20}],
   status: [{ required: true, message: 'Please input status!', trigger: 'change' }],
   gender: [{ required: true, message: 'Please input gender!', trigger: 'change' }],
   role: [{ required: true, message: 'Please input role!', trigger: 'change' }],
@@ -211,9 +211,9 @@ const checkPasswordAgainEditPassword = async (_rule: Rule, value: string) => {
   }
 };
 const editPasswordFormRules: Record<string, Rule[]> = {
-  password: [{ required: true, message: 'Please input password!', trigger: 'change' }],
+  password: [{ required: true, message: 'Please input password!', trigger: 'change' }, {message: 'too long!', max: 20}],
   checked: [{ required: true, message: 'Please input password again!', trigger: 'change' },
-    { validator: checkPasswordAgainEditPassword, trigger: 'change' }],
+    { validator: checkPasswordAgainEditPassword, trigger: 'change' }, {message: 'too long!', max: 20}],
 };
 
 const dateString = (str: string) => {
@@ -533,8 +533,17 @@ body {
 
 .editable-cell {
   position: relative;
+  .editable-cell-input-wrapper,
+  .editable-cell-text-wrapper {
+    padding-right: 24px;
+  }
 
-  .editable-cell-icon {
+  .editable-cell-text-wrapper {
+    padding: 5px 24px 5px 5px;
+  }
+
+  .editable-cell-icon,
+  .editable-cell-icon-check {
     position: absolute;
     right: 0;
     width: 20px;
@@ -546,11 +555,21 @@ body {
     display: none;
   }
 
-  .editable-cell-icon:hover {
+  .editable-cell-icon-check {
+    line-height: 28px;
+  }
+
+  .editable-cell-icon:hover,
+  .editable-cell-icon-check:hover {
     color: #108ee9;
+  }
+
+  .editable-add-btn {
+    margin-bottom: 8px;
   }
 }
 .editable-cell:hover .editable-cell-icon {
   display: inline-block;
 }
+
 </style>
