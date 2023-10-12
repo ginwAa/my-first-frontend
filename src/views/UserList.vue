@@ -1,16 +1,16 @@
 <template>
   <context-holder />
   <div>
-    <a-page-header title="UserList" @click="onLogoutClick">
+    <a-page-header title="Users">
       <template #tags>
         <a-tag color="blue">total: {{userDataList.total}}</a-tag>
       </template>
       <template #extra>
-        <a-button key="1" type="primary">Log out</a-button>
+        <a-button key="1" type="primary" @click="onLogoutClick">Log out</a-button>
       </template>
     </a-page-header>
     <a-table :columns="columns" :dataSource="userDataList.data" :loading="userDataList.loading"
-             :pagination="false" :scroll="{ x: 1600, y: 420 }" style="width: 1200px"
+             :pagination="false" :scroll="{ x: 1600, y: 425 }" style="width: 1200px"
     >
       <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
         <div style="padding: 8px">
@@ -18,7 +18,7 @@
           <a-input
               ref="searchInput"
               :value="selectedKeys[0]"
-              :placeholder="`Search ${column.dataIndex}`"
+              :placeholder="`Search by ${column.dataIndex}`"
               style="width: 188px; margin-bottom: 8px; display: block"
               @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
               @pressEnter="usernameSearch(selectedKeys, confirm)"
@@ -152,6 +152,8 @@ import { Table, Pagination, FormInstance, message } from 'ant-design-vue';
 import { SearchOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import type { Rule } from 'ant-design-vue/es/form';
 
+// import AddForm from '@/components/AddForm.vue'
+
 import userPage from '@/apis/user/page.ts';
 import userCount from '@/apis/user/count.ts';
 import { userAdd, UserAddDTO } from '@/apis/user/add.ts'
@@ -220,58 +222,58 @@ const dateString = (str: string) => {
 
 const columns = [
   {
-    title: 'id',
+    title: 'Id',
     dataIndex: 'id',
     width: 100,
     fixed: 'left',
   },
   {
-    title: 'account',
+    title: 'Account',
     dataIndex: 'account',
     width: 150,
     ellipsis: true,
   },
   {
-    title: 'username',
+    title: 'Username',
     dataIndex: 'username',
     width: 150,
     customFilterDropdown: true,
     ellipsis: true,
   },
   {
-    title: 'gender',
+    title: 'Gender',
     dataIndex: 'gender',
     width: 90,
   },
   {
-    title: 'email',
+    title: 'Email',
     dataIndex: 'email',
     width: 200,
     ellipsis: true,
   },
   {
-    title: 'phone',
+    title: 'Phone',
     dataIndex: 'phone',
     width: 120,
     ellipsis: true,
   },
   {
-    title: 'role',
+    title: 'Role',
     dataIndex: 'role',
     width: 90,
   },
   {
-    title: 'status',
+    title: 'Status',
     dataIndex: 'status',
     width: 90,
   },
   {
-    title: 'updatedAt',
+    title: 'UpdatedAt',
     dataIndex: 'updatedAt',
     width: 160,
   },
   {
-    title: 'createdAt',
+    title: 'CreatedAt',
     dataIndex: 'createdAt',
     width: 160,
   },
@@ -348,10 +350,10 @@ onMounted(() => {
   messageApi.success('Welcome!', 2);
 });
 
-const addFormRef = ref<FormInstance>();
 const editPasswordFormRef = ref<FormInstance>();
-const addFormVisible = ref(false);
 const editPasswordFormVisible = ref(false);
+const addFormRef = ref<FormInstance>();
+const addFormVisible = ref(false);
 const addFormData = reactive<UserAddDTO>({
   id: null,
   username: '',
@@ -373,6 +375,7 @@ const editPasswordFormData = reactive<checkedPassword>({
   checked: '',
 })
 const onAddFormOk = () => {
+  console.log(addFormRef.value);
   addFormRef.value.validateFields()
       .then(values => {
         values.status = Number(values.status);
@@ -486,6 +489,7 @@ const onDelete = (id: number) => {
 };
 
 const onLogoutClick = async () => {
+  console.log("log out done!");
   localStorage.removeItem('role');
   router.push('/login');
 }

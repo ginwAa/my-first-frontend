@@ -92,6 +92,7 @@ const router = useRouter();
 const loginAble = computed(() => {
   return loginForm.account && loginForm.password;
 });
+
 const regFormRef = ref<FormInstance>();
 const regFormVisible = ref(false);
 const regFormData = reactive<UserRegisterDTO>({
